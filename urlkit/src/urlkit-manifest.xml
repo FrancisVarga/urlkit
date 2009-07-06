@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<componentPackage>
+    <component id="FlexBrowserManagerAdapter" class="urlkit.rules.FlexBrowserManagerAdapter"/>
+    <component id="UrlDelegateRule" class="urlkit.rules.UrlDelegateRule"/>
+    <component id="UrlNavigatorRule" class="urlkit.rules.UrlNavigatorRule"/>
+    <component id="UrlRuleContainer" class="urlkit.rules.UrlRuleContainer"/>
+    <component id="UrlRuleSet" class="urlkit.rules.UrlRuleSet"/>
+    <component id="UrlValueRule" class="urlkit.rules.UrlValueRule"/>
+</componentPackage>
+

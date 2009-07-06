@@ -1,0 +1,92 @@
+This software is provided under the open source license agreement
+attached at the end of this file.
+
+PROJECT CONTENTS
+
+	urlkit/		(this directory: the UrlKit library)
+	sample/		a sample application
+	test/		set of unit tests
+
+
+BUILDING
+
+All projects may be built either using Ant or Eclipse.
+
+The Eclipse projects are compatible with the public beta2 build of Flex Builder 3,
+since it provides multi-SDK support.  You can easily enough delete the project files and re-import into
+Flex Builder 2 if you prefer to use that.
+
+The Eclipse projects are set up to build against the 2.0.1hf3 SDK.  The Ant files will build
+against either SDK.  You must override the definition of the flex.home variable to point
+to your Flex install directory.
+
+USAGE
+
+1. Add the library bin/urlkit.swc or bin/urlkitFlex3.swc into your ActionScript
+classpath.  The MXML components associated with UrlKit are all available
+at the following component manifest URL:
+
+    http://www.allurent.com/2006/urlkit
+
+
+2. Add UrlKit components to your project as needed.
+
+3. FOR FLEX 2 ONLY: Modify your application's HTML source code as follows.  (Flex 3
+   now includes its own history-management Javascript in the standard HTML template, included
+   here as sample/html-template-flex3/.  You do not need to modify it.)
+
+  a. ensure that the standard Flex "history" IFRAME is not included.
+
+  b. either use the exact scripting approach shown in html-template/index.template.html
+     or include all material comments marked "REQUIRED UrlKit SECTION".
+     
+  c. if not using the index.template.html approach to generating your OBJECT/EMBED
+     markup, then be sure you're not nesting an EMBED tag inside an OBJECT tag in
+     your system as this breaks Safari bookmarking support.
+     
+
+  d. Add the following files from the html-template/ directory to the same directory
+     containing the page that loads your Flex application:
+
+	historyFrame.html
+	urlkit.css
+	urlkit.js
+
+
+DOCUMENTATION
+
+Please see the files UrlKit.htm (HTML) or UrlKit.doc (MS Word).  Beyond that,
+the source code comments provide a more detailed guide to the full
+functionality of the package.
+
+
+BROWSER SUPPORT
+
+This package has been tested on:
+	Firefox 1.5, 2.0
+	IE 6 (Windows)
+	Safari 2
+
+
+LICENSE:
+
+Copyright (c) 2006 Allurent, Inc.
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify,
+merge, publish, distribute, sublicense, and/or sell copies of the
+Software, and to permit persons to whom the Software is furnished
+to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

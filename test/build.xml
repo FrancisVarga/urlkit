@@ -1,0 +1,33 @@
+<project name="Bookmarks" default="build">
+	<property name="flex.sdks" value="/Applications/Adobe Flex Builder 3 Plug-in/sdks"/>
+	<property name="flex.sdk.version" value="2.0.1"/>
+	<property name="flex.home" value="${flex.sdks}/${flex.sdk.version}"/>
+	<property name="flex.mxmlc.jar" value="${flex.home}/lib/mxmlc.jar"/>
+	<property name="flex3.sdk.version" value="3.0.0"/>
+	<property name="flex3.home" value="${flex.sdks}/${flex3.sdk.version}"/>
+	<property name="flex3.mxmlc.jar" value="${flex3.home}/lib/mxmlc.jar"/>
+
+		<target name="build">
+		<java jar="${flex.mxmlc.jar}" dir="." fork="true" failonerror="true">
+			<arg value="+flexlib=${flex.home}/frameworks"/>
+		    <arg value="-library-path+=../urlkit/bin/urlkit.swc,flexunit2.swc"/>
+			<arg value="-output=bin/UrlKitTest.swf"/>
+			<arg value="UrlKitTest.mxml"/>
+		</java>
+	</target>
+		
+	<target name="build-flex3">
+		<java jar="${flex3.mxmlc.jar}" dir="." fork="true" failonerror="true">
+			<arg value="+flexlib=${flex3.home}/frameworks"/>
+		    <arg value="-library-path+=../urlkit/bin/urlkitFlex3.swc,flexunit2.swc"/>
+			<arg value="-output=bin/UrlKitTestFlex3.swf"/>
+			<arg value="UrlKitTest.mxml"/>
+		</java>
+	</target>
+		
+	<target name="clean">
+		<delete dir="bin"/>
+		<mkdir dir="bin"/>
+	</target>
+
+</project>

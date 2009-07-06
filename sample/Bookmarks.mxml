@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application     xmlns:mx="http://www.adobe.com/2006/mxml"
+                    xmlns="*"
+                    xmlns:url="http://www.allurent.com/2006/urlkit"
+                    width="100%" height="100%"
+                    >
+
+    <url:FlexBrowserManagerAdapter applicationState="{mainUrls}"/>
+    
+    <url:UrlRuleSet id="mainUrls">
+        <url:UrlNavigatorRule id="nr" tabNavigator="{tn}" urlFormat="/*" urlField="className" useChildLabelForTitle="true" />
+        <url:UrlDelegateRule rule="{nr.navigatorChildRule}"/>
+    </url:UrlRuleSet>
+
+    <mx:TabNavigator id="tn" width="100%" height="100%">
+        <StatelessExample />
+        <StatesExample />
+        <StatesAndFormsExample />
+    </mx:TabNavigator>
+</mx:Application> 

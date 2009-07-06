@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas          xmlns:mx="http://www.adobe.com/2006/mxml"
+                    xmlns="*"
+                    xmlns:url="http://www.allurent.com/2006/urlkit"
+                    label="States and Forms Controls Example"
+                    horizontalScrollPolicy="off"
+                    verticalScrollPolicy="off"
+                    color="white"
+                    fontWeight="bold"
+                    currentState="sideA"
+                    >
+
+    <url:UrlRuleSet id="urls">
+        <url:UrlValueRule urlPattern="/(side[AB])" urlFormat="/*" sourceValue="currentState" />
+        <url:UrlDelegateRule rule="{currentState == 'sideA' ? sideARule : sideBRule}" />
+    </url:UrlRuleSet>
+    
+    <url:UrlRuleSet id="sideARule">
+        <url:UrlValueRule urlFormat=";lowPrice=*" sourceValue="lowPrice" defaultValue="10"/>
+        <url:UrlValueRule urlFormat=";highPrice=*" sourceValue="highPrice" defaultValue="100"/>
+        <url:UrlValueRule urlFormat=";searchText=*" sourceValue="searchText" defaultValue=""/>
+        <url:UrlValueRule urlFormat=";used=*" sourceValue="used" defaultValue="f"/>
+        <url:UrlValueRule urlFormat=";new=*" sourceValue="neW" defaultValue="f"/>
+        <url:UrlValueRule urlFormat=";brand=*" sourceValue="brand" defaultValue="All"/>
+        <url:UrlValueRule urlFormat=";size=*" sourceValue="size" defaultValue=""/>
+    </url:UrlRuleSet>
+
+    <url:UrlRuleSet id="sideBRule">
+        <url:UrlNavigatorRule urlFormat="/*" accordion="{stepAcc}" urlField="id" />
+    </url:UrlRuleSet>
+
+<!-- The following approach also works, and is slightly simpler -->
+<!--
+    <url:UrlRuleSet id="urls" type="one">
+        <url:UrlRuleSet  id="sideARule" urlPattern="/sideA.*">
+            <url:UrlValueRule urlFormat="/*" sourceValue="currentState" />
+            <url:UrlValueRule urlFormat=";lowPrice=*" sourceValue="lowPrice" defaultValue="10"/>
+            <url:UrlValueRule urlFormat=";highPrice=*" sourceValue="highPrice" defaultValue="100"/>
+            <url:UrlValueRule urlFormat=";searchText=*" sourceValue="searchText" defaultValue=""/>
+            <url:UrlValueRule urlFormat=";used=*" sourceValue="used" defaultValue="f"/>
+            <url:UrlValueRule urlFormat=";new=*" sourceValue="neW" defaultValue="f"/>
+            <url:UrlValueRule urlFormat=";brand=*" sourceValue="brand" defaultValue="All"/>
+            <url:UrlValueRule urlFormat=";size=*" sourceValue="size" defaultValue=""/>
+        </url:UrlRuleSet>
+        <url:UrlRuleSet id="sideBRule" urlPattern="/sideB/.*">
+            <url:UrlValueRule urlFormat="/*" sourceValue="currentState" />
+            <url:UrlNavigatorRule urlFormat="/*" accordion="{stepAcc}" urlField="id" />
+        </url:UrlRuleSet>
+    </url:UrlRuleSet>    
+ -->
+    <!-- filter criteria data model -->
+    <mx:Script>
+        <![CDATA[
+            private var _lowPrice:Number = 10;
+            [Bindable]
+            public function get lowPrice():Number
+            {
+                return _lowPrice;
+            }
+            public function set lowPrice(n:Number):void
+            {
+                _lowPrice = n;
+                if (slider)
+                    slider.values = [lowPrice,_highPrice];
+            }
+            
+            private  var _highPrice:Number = 100;
+            [Bindable]
+            public function get highPrice():Number
+            {
+                return _highPrice;
+            }
+            public function set highPrice(n:Number):void
+            {
+                trace("setting high price to " + n);
+                _highPrice = n;
+                if (slider)
+                    slider.values = [lowPrice,_highPrice];
+            }
+
+            [Bindable]
+            public var searchText:String;
+            
+            [Bindable]
+            public var used:Boolean;
+
+            [Bindable]
+            public var neW:Boolean;
+
+            [Bindable]
+            public var brand:String;
+
+            [Bindable]
+            public var size:String;
+        ]]>
+    </mx:Script>
+
+    <!-- work around lack of array binding -->
+
+    <mx:HBox left="0" top="0" right="0" bottom="0">
+        <mx:VBox id="sideA"  width="25%" height="100%" backgroundColor="0x999999" borderStyle="solid" borderColor="0x999999" cornerRadius="25" paddingLeft="10" paddingTop="10" paddingRight="10" paddingBottom="10">
+            <mx:Label text="Price:" />
+            <mx:HSlider id="slider" width="100%" change="lowPrice = slider.values[0]; highPrice = slider.values[1]" 
+                        snapInterval="1" tickInterval="5" minimum="10" maximum="100" thumbCount="2" values="[10, 100]"/>
+            
+            <mx:Spacer />
+            <mx:Label text="Search criteria:" />
+            <mx:TextInput text="{searchText}" enter="searchText = event.target.text" color="black" />
+
+            <mx:Spacer />
+            <mx:CheckBox label="used" selected="{used}" click="used = event.target.selected" />
+            <mx:CheckBox label="new" selected="{neW}" click="neW = event.target.selected" />
+
+            <mx:Spacer />
+            <mx:Label text="Select a brand:"/>
+            <mx:ComboBox selectedItem="{brand}" change="brand = event.target.selectedItem" color="black">
+                <mx:dataProvider>
+                    <mx:Array>
+                        <mx:String>All</mx:String>
+                        <mx:String>Acme</mx:String>
+                        <mx:String>XYZ Inc.</mx:String>
+                        <mx:String>AAA</mx:String>
+                    </mx:Array>
+                </mx:dataProvider>
+            </mx:ComboBox>
+            
+            <mx:Spacer />
+            <mx:Label text="Select a size:"/>
+            <mx:RadioButtonGroup id="sizeGroup" selectedValue="{size}" itemClick="size = String(sizeGroup.selectedValue)"/>
+            <mx:RadioButton groupName="sizeGroup" value="small" label="Small" />
+            <mx:RadioButton groupName="sizeGroup" value="medium" label="Medium" />
+            <mx:RadioButton groupName="sizeGroup" value="large" label="Large" />
+        </mx:VBox>
+
+        <mx:Spacer width="50%" />
+
+        <mx:VBox id="sideB" width="25%" height="100%" backgroundColor="0x999999" borderStyle="solid" borderColor="0x999999" cornerRadius="25" paddingLeft="10" paddingTop="10" paddingRight="10" paddingBottom="10">
+            <mx:Accordion id="stepAcc" color="black" width="100%" height="100%">
+                <mx:HBox id="step1" label="Step 1" />
+                <mx:HBox id="step2" label="Step 2" />
+                <mx:HBox id="step3" label="Step 3" />
+            </mx:Accordion>
+        </mx:VBox>
+    </mx:HBox>
+    <mx:VBox id="cover" click="currentState == 'sideA' ? currentState='sideB' : currentState='sideA'" 
+                backgroundColor="0x555555" borderStyle="solid" borderColor="0x555555" cornerRadius="25" paddingLeft="10" paddingTop="10" paddingRight="10" paddingBottom="10"
+                height="100%" width="{sideB.width * 3}">
+        <mx:Label id="title" text="Viewing Side B" fontSize="15"/>
+        <mx:Label text="Click to view the other side" />
+    </mx:VBox>
+
+    <mx:states>
+        <mx:State name="sideA">
+            <mx:SetStyle target="{cover}" name="right" value="0" />
+            <mx:SetProperty target="{title}" name="text" value="Viewing Side A" />
+        </mx:State>
+        <mx:State name="sideB">
+            <mx:SetProperty target="{cover}" name="x" value="0" />
+            <mx:SetProperty target="{title}" name="text" value="Viewing Side B" />
+        </mx:State>
+    </mx:states>
+
+    <mx:transitions>
+         <!-- layout issues if you do transitions for the initial state setting -->
+         <mx:Transition fromState="" toState="*">
+         </mx:Transition>
+         <mx:Transition fromState="*" toState="*">
+            <mx:Parallel targets="{[cover]}">
+                <mx:Move target="{cover}" duration="500" />
+                <mx:Resize target="{cover}" duration="500" />
+            </mx:Parallel>
+         </mx:Transition>
+    </mx:transitions>
+    
+</mx:Canvas>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300" xmlns:url="http://www.allurent.com/2006/urlkit">
+    <mx:Script>
+        <![CDATA[
+           [Bindable]
+           public var foo:String; 
+           
+           [Bindable]
+           public var c1:ComplexValue = new ComplexValue();
+
+           [Bindable]
+           public var c2:ComplexValue;
+        ]]>
+    </mx:Script>
+    <url:UrlValueRule id="r1" sourceValue="foo"/>
+    <url:UrlValueRule id="r2" sourceValue="c1.s1"/>
+    <url:UrlValueRule id="r3" sourceValue="c2.s1"/>
+    <url:UrlValueRule id="r4" sourceValue="c2.c1.s1"/>
+</mx:Canvas>

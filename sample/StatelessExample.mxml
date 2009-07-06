@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox            xmlns:mx="http://www.adobe.com/2006/mxml"
+                    xmlns="*"
+                    xmlns:url="http://www.allurent.com/2006/urlkit"
+                    label="Stateless Example"
+                    paddingLeft="10"
+                    width="200"
+                    >
+                    
+    <mx:Script>
+        <![CDATA[
+            import flash.net.navigateToURL;
+            import flash.net.URLRequest;
+            import urlkit.rules.FlexBrowserManagerAdapter;
+            
+            private function navigateToDestination():void
+            {
+                FlexBrowserManagerAdapter.getInstance().navigate("/StatesAndFormsExample/sideB/step2");
+            }
+        ]]>
+    </mx:Script>
+
+    <url:UrlValueRule id="urls" defaultValue=""/>
+
+    <!-- Define a Panel container that defines the login form.-->
+    <mx:Panel title="Welcome" id="loginPanel" 
+        backgroundColor="0x555555"
+        horizontalScrollPolicy="off" verticalScrollPolicy="off"
+        paddingTop="10" paddingLeft="10" paddingRight="10" paddingBottom="10">
+    
+        <mx:Text width="100%" color="white"
+            text="Welcome to the Bookmarks example app for UrlKit."/>
+            
+        <mx:Button label="Go to side B, step 2" click="navigateToDestination()"/>
+
+    </mx:Panel>
+</mx:HBox>

@@ -1,0 +1,35 @@
+<project name="urlkitDist" default="all">
+    <property name="version" value="0.92"/>
+    <property name="dist.dir" value="urlkit-${version}"/>
+
+    <target name="dist">
+        <ant dir="urlkit" target="clean"/>
+        <ant dir="urlkit" target="build"/>
+        <ant dir="urlkit" target="build-flex3"/>
+        <ant dir="urlkit" target="doc"/>
+        <ant dir="sample" target="clean"/>
+        <ant dir="sample" target="build"/>
+        <ant dir="sample" target="build-flex3"/>
+        <ant dir="sample" target="stage"/>
+    </target>
+
+    <target name="stage">
+        <delete dir="${dist.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+        <copy todir="${dist.dir}/urlkit">
+            <fileset dir="urlkit"/>
+        </copy>
+        <copy todir="${dist.dir}/sample">
+            <fileset dir="sample"/>
+        </copy>
+        <copy todir="${dist.dir}/test">
+            <fileset dir="test"/>
+        </copy>
+    </target>
+
+    <target name="zip">
+        <zip destfile="urlkit-${version}.zip" basedir="." includes="${dist.dir}/**"/>
+    </target>
+
+    <target name="all" depends="dist,stage,zip"/>
+</project>

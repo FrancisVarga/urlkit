@@ -1,0 +1,9 @@
+*.o
+.DS_Store
+*.DS_Store
+**/*.log
+*urlkit.swc
+**/*urlkit.swc
+bin/*.swc
+*.svn
+**/*.svn
