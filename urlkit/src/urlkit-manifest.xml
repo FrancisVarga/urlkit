@@ -6,5 +6,6 @@
     <component id="UrlRuleContainer" class="urlkit.rules.UrlRuleContainer"/>
     <component id="UrlRuleSet" class="urlkit.rules.UrlRuleSet"/>
     <component id="UrlValueRule" class="urlkit.rules.UrlValueRule"/>
+    <component id="UrlDelegate" class="urlkit.rules.UrlDelegate"/>
 </componentPackage>
 

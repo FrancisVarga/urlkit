@@ -35,6 +35,7 @@ import mx.controls.*;
 import mx.core.*;
 import mx.events.*;
 import mx.managers.*;
+import mx.utils.URLUtil;
 
 /**
  * This class is the interface interacts with an instance of IUrlApplicationState
@@ -69,6 +70,8 @@ public class FlexBrowserManagerAdapter extends EventDispatcher implements IMXMLO
 
     // flag indicating that the browser manager is enabled.
     private var _enabled:Boolean = true;
+
+	private var _title:String = '';
 
     // static handle to single instance of this adapter
     private static var _instance:FlexBrowserManagerAdapter = null;
@@ -121,6 +124,17 @@ public class FlexBrowserManagerAdapter extends EventDispatcher implements IMXMLO
         {
             updateState();
         }
+    }
+
+    /**
+     * Explicitly set the window title.
+     * @param s the title of the browser window
+     */
+    public function set title(s:String):void
+    {
+		_title = s;
+		if (_browserManager)
+    		_browserManager.setTitle(s);
     }
 
     /**
@@ -230,7 +244,8 @@ public class FlexBrowserManagerAdapter extends EventDispatcher implements IMXMLO
                 if (_stateInitialized)
                 {
                     browserUrl = applicationState.url;
-                    title = applicationState.title;
+                    if (applicationState.title)
+	                    title = applicationState.title;
                     _updateRequested = false;
                 }
                 else
@@ -272,7 +287,7 @@ public class FlexBrowserManagerAdapter extends EventDispatcher implements IMXMLO
         }
         
         _browserManager.addEventListener(BrowserChangeEvent.BROWSER_URL_CHANGE, setPlayerUrl);
-    	_browserManager.init(applicationState.url, applicationState.title);
+    	_browserManager.init(applicationState.url, _title ? _title : applicationState.title);
         _stateInitialized = true;
         
         if (browserUrl == "")
@@ -281,7 +296,7 @@ public class FlexBrowserManagerAdapter extends EventDispatcher implements IMXMLO
             _defaultUrl = applicationState.url;  // save this URL for workaround on empty URL later
         }
         
-        Application.application.addEventListener(MouseEvent.MOUSE_DOWN, ieTitleBugWorkaround);
+        FlexGlobals.topLevelApplication.addEventListener(MouseEvent.MOUSE_DOWN, ieTitleBugWorkaround);
      }
      
      /**
@@ -290,10 +305,11 @@ public class FlexBrowserManagerAdapter extends EventDispatcher implements IMXMLO
       */
      private function ieTitleBugWorkaround(event:Event):void
      {
-         Application.application.removeEventListener(MouseEvent.MOUSE_DOWN, ieTitleBugWorkaround);
+         FlexGlobals.topLevelApplication.removeEventListener(MouseEvent.MOUSE_DOWN, ieTitleBugWorkaround);
          try
          {
-             title = applicationState.title;
+         	if (!_title)
+				title = applicationState.title;
          }
          catch (e:StateNotAvailableError) {
          }
@@ -306,6 +322,7 @@ public class FlexBrowserManagerAdapter extends EventDispatcher implements IMXMLO
     private function setPlayerUrl(e:BrowserChangeEvent):void
     {
         var url:String = browserUrl;
+		var parsed:Object = URLUtil.stringToObject(url);
         if (url == "")
         {
             // NOTE: Workaround for Flex bug SDK-12955.  Initing the BrowserManager above
@@ -341,15 +358,6 @@ public class FlexBrowserManagerAdapter extends EventDispatcher implements IMXMLO
         {
             _applicationState.addEventListener(UrlBaseRule.STATE_CHANGE, updateState);
         }
-    }
-
-    /**
-     * Explicitly set the window title.
-     * @param s the title of the browser window
-     */
-    public function set title(s:String):void
-    {
-    	_browserManager.setTitle(s);
     }
 }
 }

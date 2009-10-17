@@ -55,12 +55,43 @@ import mx.core.*;
  */
 public class UrlRuleSet extends UrlRuleContainer
 {
+	/**
+	 *  If any of the urls in the tree are inactive (null, invalid, etc.),
+	 *	then the url will be blank
+	 */
     public static const ALL:String = "all";
+
+	/**
+	 *  It will get all active urls in the tree, even if one in the middle is null
+	 */
     public static const ANY:String = "any";
+
+	/**
+	 *  It will only get the first one in the tree
+	 */
     public static const ONE:String = "one";
+
+	/**
+	 *  It will stop once it hits the first null/invalid url
+	 */
+	public static const NORMAL:String = "normal"
         
-    [Bindable]
-    public var type:String = ALL;
+	private var _type:String = NORMAL;
+	[Inspectable(category="General", defaultValue="normal", enumeration="normal,all,any,one")]
+	[Bindable]
+	/**
+	 *  How you want this and the sub urls to be processed
+	 */
+	public function get type():String
+	{
+		return _type;
+	}
+	public function set type(value:String):void
+	{
+		if (_type == value) 
+			return;
+		_type = value;
+	}
     
     public function UrlRuleSet()
     {
@@ -127,6 +158,10 @@ public class UrlRuleSet extends UrlRuleContainer
                 ruleApplied = false;
                 break;
             }
+			else if (type == NORMAL)
+			{
+				break;
+			}
         }
         
         if (ruleApplied)

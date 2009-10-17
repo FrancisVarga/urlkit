@@ -26,12 +26,14 @@ package urlkit.rules
 
 import flash.events.*;
 import flash.utils.*;
-import mx.core.*;
-import mx.states.*;
-import mx.utils.*;
+
 import mx.binding.*;
 import mx.controls.*;
+import mx.core.*;
 import mx.events.FlexEvent;
+import mx.managers.ILayoutManagerClient;
+import mx.states.*;
+import mx.utils.*;
 
 /**
  * This event is dispatched when the URL component for this value changes.
@@ -57,7 +59,7 @@ public class UrlBaseRule extends EventDispatcher implements IUrlRule, IMXMLObjec
     private var _urlPattern:String;
     
     /** Compiled URL pattern regular expression as calculated from format or pattern. */
-    private var _urlPatternRegEx:RegExp;
+    [Bindable] public var _urlPatternRegEx:RegExp;
 
     /*
      * Flag indicating whether this rule is able to process browser updates.
@@ -75,7 +77,7 @@ public class UrlBaseRule extends EventDispatcher implements IUrlRule, IMXMLObjec
     private var _id:String;
     
     /** Document as passed in via IMXMLObject.initialize() */
-    protected var _document:UIComponent;
+    protected var _document:IUIComponent;
     
     /** Storage property for parent rule. */
     private var _parentRule:IUrlRule;
@@ -240,8 +242,8 @@ public class UrlBaseRule extends EventDispatcher implements IUrlRule, IMXMLObjec
                 _parentRule.invalidateState();
             }
             
-            dispatchEvent(new Event(STATE_CHANGE));
         }
+   		dispatchEvent(new Event(STATE_CHANGE));
     }
 
     /**
@@ -296,7 +298,7 @@ public class UrlBaseRule extends EventDispatcher implements IUrlRule, IMXMLObjec
         if (_document != null)
         {
             // if there is an MXML document, we care about its initialization
-            if (_document.initialized)
+            if ((_document as ILayoutManagerClient).initialized)
             {
                 // It's initialized, run this rule's readiness check
                 checkReadiness(null);
@@ -441,7 +443,11 @@ public class UrlBaseRule extends EventDispatcher implements IUrlRule, IMXMLObjec
         if (_urlPatternRegEx == null)
         {
             var pattern:String = urlPattern != null ? urlPattern : defaultPatternFromFormat(urlFormat);
-            
+            // for supporting urls in debug-mode
+			if (pattern.charAt(0) == '?')
+            {
+                pattern = pattern.slice(1, pattern.length);
+            }
             if (matchUrlBeginning && (pattern.length == 0 || pattern.charAt(0) != '^'))
             {
                 pattern = "^" + pattern;
@@ -455,7 +461,8 @@ public class UrlBaseRule extends EventDispatcher implements IUrlRule, IMXMLObjec
         
     public function get doesMatchUrl():Boolean
     {
-        return urlPatternRegEx.test(this.url);
+    	var result:Boolean = urlPatternRegEx.test(this.url);
+        return result;
     }
 
     public function exec(url:String):Array
@@ -501,7 +508,7 @@ public class UrlBaseRule extends EventDispatcher implements IUrlRule, IMXMLObjec
      */
     protected function checkReadiness(e:Event):void
     {
-        ready = (_document == null || _document.initialized);
+        ready = (_document == null || (_document as ILayoutManagerClient).initialized);
     }
     
     /**
@@ -523,9 +530,10 @@ public class UrlBaseRule extends EventDispatcher implements IUrlRule, IMXMLObjec
     // legal non-meta URL characters (note that embedded ones will be
     // escaped to %NN notation and so will satisfy this regexp).
     //
-    private static const DEFAULT_GROUP_REGEXP:String = "([a-zA-Z0-9%+\!\~\*\'\(\)\.\_\-]*)";
+    private static const DEFAULT_GROUP_REGEXP:String = "([a-zA-Z0-9%+\!\~\/\*\'\(\)\.\_\-]*)";
     public static function defaultPatternFromFormat(f:String):String
     {
+    	trace("DEFAULT: " + f);
         return f == null ? "(.*)" : f.replace(/\*/, DEFAULT_GROUP_REGEXP);
     }
 }
